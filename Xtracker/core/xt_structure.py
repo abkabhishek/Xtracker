@@ -24,6 +24,7 @@ class FL_Structrure:
         self.InfoClass = []
         self.InfoFunction = []
         self.InfoImport = []
+        self.InfoClassFunction = {}
     
 #     def getInfo(self):
 #         pprint(FD.get_files(self.DirPath,"*/*.py"))
@@ -71,11 +72,34 @@ class FL_Structrure:
                 self.InfoImport.append(D)
                 continue
             
+        for item in self.InfoClass:
+            self.InfoClassFunction[item[0]]=item[1]
+        
+        for item in self.InfoFunction:
+            self.InfoClassFunction[item[0]]=item[1]
+            
     def print_all_info(self):
+        print("="*30)
         print("File : {}".format(self.FilePath))
-        pprint(self.InfoImport)
-        pprint(self.InfoClass)
-        pprint(self.InfoFunction)
+        print("-"*30)
+        print("Imports :-")
+        for item in self.InfoImport:
+            print(" "*4,end="")
+            print(item[1])
+        print("-"*30)
+        print("Classes/Functions :-")
+        for lineNum in sorted(self.InfoClassFunction.keys()):
+            x = 4
+            item = self.InfoClassFunction[lineNum]
+            if item[0]=="d":
+                x=8
+            print(" "*x,end="")
+            print(item)
+            
+            
+#         pprint(self.InfoImport)
+#         pprint(self.InfoClass)
+#         pprint(self.InfoFunction)
         
                 
             
@@ -83,7 +107,7 @@ class FL_Structrure:
         
         
     
-Fls = FD.get_files("/Users/abk/dev/python/ofc/bit/sb-automation-py-behave/BDDFramework","*/*.py")
+Fls = FD.get_files("Path/To/ProjectRoot","*/*.py")
 
 for fl in Fls:
     FS = FL_Structrure(fl)
