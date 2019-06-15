@@ -2,6 +2,7 @@
 import sys
 import re
 from pprint import pprint
+from certifi import __main__
 
 
 sys.path.append(".")
@@ -16,6 +17,7 @@ class FL_Structrure:
 
         
         self.FilePath = FLPath
+        
         self.Pat_Funtion = "def .*:"
         self.Pat_Class = "class .*:"
         self.Pat_Import = "^import .*"
@@ -30,14 +32,14 @@ class FL_Structrure:
 #         pprint(FD.get_files(self.DirPath,"*/*.py"))
         
         
-    def read_file(self,FileName):
+    def _read_file(self,FileName):
         
         with open(FileName) as fl:
             data= fl.readlines()
         
         return data
     
-    def get_match_all(self,pat,source,n):
+    def _get_match_all(self,pat,source,n):
             
         x = re.findall(pat, source)
         if x:
@@ -45,29 +47,29 @@ class FL_Structrure:
         else:
             return None
         
-    def parse_code_info(self,fileName=None):
+    def parse_code(self,fileName=None):
         if fileName:
-            Data = self.read_file(fileName)
+            Data = self._read_file(fileName)
         else:
-            Data = self.read_file(self.FilePath)
+            Data = self._read_file(self.FilePath)
 
 
         for num, item in enumerate(Data,1):
-            D = self.get_match_all(self.Pat_Funtion, item,num)
+            D = self._get_match_all(self.Pat_Funtion, item,num)
             if D:
                 self.InfoFunction.append(D)
                 continue
-            D = self.get_match_all(self.Pat_Class, item,num)
+            D = self._get_match_all(self.Pat_Class, item,num)
             if D:
                 self.InfoClass.append(D)
                 continue
             
-            D = self.get_match_all(self.Pat_Import, item,num)
+            D = self._get_match_all(self.Pat_Import, item,num)
             if D:
                 self.InfoImport.append(D)
                 continue
             
-            D = self.get_match_all(self.Pat_FromImport, item,num)
+            D = self._get_match_all(self.Pat_FromImport, item,num)
             if D:
                 self.InfoImport.append(D)
                 continue
@@ -78,7 +80,7 @@ class FL_Structrure:
         for item in self.InfoFunction:
             self.InfoClassFunction[item[0]]=item[1]
             
-    def print_all_info(self):
+    def print_structure(self):
         print("="*30)
         print("File : {}".format(self.FilePath))
         print("-"*30)
@@ -97,20 +99,19 @@ class FL_Structrure:
             print(item)
             
             
-#         pprint(self.InfoImport)
-#         pprint(self.InfoClass)
-#         pprint(self.InfoFunction)
+
         
                 
             
         
         
         
+if __name__=="__main__":
+    # Fls = FD.get_files("Path/To/ProjectRoot","*/*.py")
+    Fls = FD.get_files("/Users/abk/dev/python/ofc/bit/sb-automation-py-behave","**/*.py")
     
-Fls = FD.get_files("Path/To/ProjectRoot","*/*.py")
-
-for fl in Fls:
-    FS = FL_Structrure(fl)
-    # CS.getInfo()
-    FS.parse_code_info()
-    FS.print_all_info()
+    for fl in Fls:
+        FS = FL_Structrure(fl)
+        FS.parse_code()
+#         FS.print_structure()
+        pprint(FS.InfoClassFunction)
