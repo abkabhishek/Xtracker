@@ -2,15 +2,15 @@
 import sys
 import re
 from pprint import pprint
-from certifi import __main__
+
 
 
 sys.path.append(".")
 
-from Xtracker.helper.handle_files import FD
+from helper.handle_files import FD
 
 
-class FL_Structrure:
+class FL_Structure:
     
     def __init__(self,FLPath):
 
@@ -18,8 +18,8 @@ class FL_Structrure:
         
         self.FilePath = FLPath
         
-        self.Pat_Funtion = "def .*:"
-        self.Pat_Class = "class .*:"
+        self.Pat_Funtion = "^def .*:"
+        self.Pat_Class = "^class .*:"
         self.Pat_Import = "^import .*"
         self.Pat_FromImport = "^from .* import .*"
         
@@ -28,8 +28,6 @@ class FL_Structrure:
         self.InfoImport = []
         self.InfoClassFunction = {}
     
-#     def getInfo(self):
-#         pprint(FD.get_files(self.DirPath,"*/*.py"))
         
         
     def _read_file(self,FileName):
@@ -41,7 +39,7 @@ class FL_Structrure:
     
     def _get_match_all(self,pat,source,n):
             
-        x = re.findall(pat, source)
+        x = re.findall(pat, source.lstrip())
         if x:
             return [n,*x]
         else:
@@ -107,11 +105,14 @@ class FL_Structrure:
         
         
 if __name__=="__main__":
-    # Fls = FD.get_files("Path/To/ProjectRoot","*/*.py")
-    Fls = FD.get_files("/Users/abk/dev/python/ofc/bit/sb-automation-py-behave","**/*.py")
     
-    for fl in Fls:
-        FS = FL_Structrure(fl)
-        FS.parse_code()
-#         FS.print_structure()
-        pprint(FS.InfoClassFunction)
+    Fls = FD.get_files("","**/*.py")
+    print(Fls)
+    
+    if len(sys.argv)>1:
+        fileName = sys.argv[1]
+    else:
+        fileName = sys.argv[0]
+    fs = FL_Structure(fileName)
+    fs.parse_code()
+    fs.print_structure()

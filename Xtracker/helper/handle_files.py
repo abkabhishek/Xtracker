@@ -15,5 +15,4 @@ class FD:
         return folders
 
 if __name__=="__main__":
-    # pprint(FD.get_files("/Users/abk/dev/python_a/All/mainGit/Xtracker/Xtracker/","*.*","core"))
-    print(FD.get_folders("/Users/abk/dev/python_a/All/mainGit/","*","Xtracker/*"))
+    print(FD.get_folders("","*","*"))
